@@ -1,0 +1,4 @@
+molecule
+molecule-plugins
+ansible-core
+docker

@@ -1,0 +1,67 @@
+---
+- name: Verify
+  hosts: all
+  become: true
+  tasks:
+    - name: Check that systemd service file exists
+      stat:
+        path: /etc/systemd/system/docker-prune.service
+      register: service_file
+
+    - name: Verify service file exists
+      assert:
+        that:
+          - service_file.stat.exists
+        fail_msg: "docker-prune.service file was not created"
+        success_msg: "docker-prune.service file exists"
+
+    - name: Check that systemd timer file exists
+      stat:
+        path: /etc/systemd/system/docker-prune.timer
+      register: timer_file
+
+    - name: Verify timer file exists
+      assert:
+        that:
+          - timer_file.stat.exists
+        fail_msg: "docker-prune.timer file was not created"
+        success_msg: "docker-prune.timer file exists"
+
+    - name: Read service file content
+      slurp:
+        path: /etc/systemd/system/docker-prune.service
+      register: service_content
+
+    - name: Verify service file contains docker command
+      assert:
+        that:
+          - "'docker system prune' in (service_content.content | b64decode)"
+          - "'-af' in (service_content.content | b64decode)"
+        fail_msg: "Service file does not contain expected docker command"
+        success_msg: "Service file contains docker system prune command"
+
+    - name: Read timer file content
+      slurp:
+        path: /etc/systemd/system/docker-prune.timer
+      register: timer_content
+
+    - name: Verify timer file contains schedule
+      assert:
+        that:
+          - "'OnCalendar=' in (timer_content.content | b64decode)"
+        fail_msg: "Timer file does not contain OnCalendar directive"
+        success_msg: "Timer file contains schedule configuration"
+
+    - name: Verify default filter is applied
+      assert:
+        that:
+          - "'--filter \"until=24h\"' in (service_content.content | b64decode)"
+        fail_msg: "Service file does not contain default until filter"
+        success_msg: "Service file contains default 24h filter"
+
+    - name: Verify volumes flag is NOT present by default
+      assert:
+        that:
+          - "'--volumes' not in (service_content.content | b64decode)"
+        fail_msg: "Service file unexpectedly contains --volumes flag"
+        success_msg: "Service file correctly excludes --volumes flag by default"

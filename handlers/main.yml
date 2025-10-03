@@ -1,0 +1,12 @@
+---
+# Handlers for Docker Prune
+
+- name: Reload systemd
+  systemd:
+    daemon_reload: true
+
+- name: Restart docker-prune timer
+  systemd:
+    name: docker-prune.timer
+    state: restarted
+  when: docker_prune_enabled

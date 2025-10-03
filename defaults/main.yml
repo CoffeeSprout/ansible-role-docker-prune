@@ -1,0 +1,43 @@
+---
+# Docker Prune Configuration
+
+# Enable/disable the prune job
+docker_prune_enabled: true
+
+# Schedule (systemd calendar format)
+# Default: Sunday 6 AM
+# Examples:
+#   - "daily" - Every day at midnight
+#   - "Mon *-*-* 03:00:00" - Mondays at 3 AM
+#   - "*-*-* 02:00:00" - Every day at 2 AM
+docker_prune_schedule: "Sun *-*-* 06:00:00"
+
+# Random delay to avoid simultaneous execution across hosts (seconds)
+# Default: 1800 (30 minutes)
+# Set to 0 to disable random delay
+docker_prune_random_delay: 1800
+
+# Catch up missed runs if system was down during scheduled time
+docker_prune_persistent: true
+
+# Include volumes in prune (adds --volumes flag to docker system prune)
+# Default: false (volumes are NOT pruned)
+# Set to true for build systems or when you want to reclaim volume space
+docker_prune_volumes: false
+
+# Keep recent items (filters by age)
+# Default: "24h" (keep items from last 24 hours)
+# Set to "" (empty string) to disable filter and prune EVERYTHING
+# Examples:
+#   - "24h" - Keep last 24 hours
+#   - "168h" - Keep last week
+#   - "720h" - Keep last 30 days
+#   - "" - Prune everything (no age filter)
+docker_prune_filter_until: "24h"
+
+# Additional custom filters (optional list)
+# Examples:
+#   - "label!=keep"
+#   - "label=temporary"
+# See: https://docs.docker.com/engine/reference/commandline/system_prune/
+docker_prune_custom_filters: []

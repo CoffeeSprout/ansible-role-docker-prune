@@ -1,0 +1,19 @@
+[Unit]
+Description=Docker System Prune
+Documentation=https://docs.docker.com/engine/reference/commandline/system_prune/
+Requires=docker.service
+After=docker.service
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/docker system prune -af \
+  {% if docker_prune_volumes %}--volumes {% endif %}\
+  {% if docker_prune_filter_until %}--filter "until={{ docker_prune_filter_until }}" {% endif %}\
+  {% for filter in docker_prune_custom_filters %}--filter "{{ filter }}" {% endfor %}
+
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=docker-prune
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,34 @@
+---
+# Docker Prune - Automated Docker cleanup using systemd timers
+
+- name: Deploy docker-prune systemd service
+  template:
+    src: docker-prune.service.j2
+    dest: /etc/systemd/system/docker-prune.service
+    owner: root
+    group: root
+    mode: '0644'
+  notify:
+    - Reload systemd
+    - Restart docker-prune timer
+
+- name: Deploy docker-prune systemd timer
+  template:
+    src: docker-prune.timer.j2
+    dest: /etc/systemd/system/docker-prune.timer
+    owner: root
+    group: root
+    mode: '0644'
+  notify:
+    - Reload systemd
+    - Restart docker-prune timer
+
+- name: Ensure systemd is reloaded
+  meta: flush_handlers
+
+- name: Enable and start docker-prune timer
+  systemd:
+    name: docker-prune.timer
+    enabled: "{{ docker_prune_enabled }}"
+    state: "{{ 'started' if docker_prune_enabled else 'stopped' }}"
+    daemon_reload: true

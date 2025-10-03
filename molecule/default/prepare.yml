@@ -1,0 +1,40 @@
+---
+- name: Prepare Debian 12
+  hosts: debian12-prune
+  become: true
+  gather_facts: false
+  tasks:
+    - name: Update and install packages (Debian 12)
+      raw: "apt-get update && apt-get install -y python3 sudo systemd"
+    - name: Gather facts
+      setup:
+
+- name: Prepare Debian 13
+  hosts: debian13-prune
+  become: true
+  gather_facts: false
+  tasks:
+    - name: Update and install packages (Debian 13)
+      raw: "apt-get update && apt-get install -y python3 sudo systemd"
+    - name: Gather facts
+      setup:
+
+- name: Prepare AlmaLinux 8
+  hosts: alma8-prune
+  become: true
+  gather_facts: false
+  tasks:
+    - name: Install Python 3.11 and packages (AlmaLinux 8)
+      raw: "dnf install -y python3.11 sudo systemd && alternatives --set python3 /usr/bin/python3.11"
+    - name: Gather facts
+      setup:
+
+- name: Prepare AlmaLinux 9
+  hosts: alma9-prune
+  become: true
+  gather_facts: false
+  tasks:
+    - name: Install packages (AlmaLinux 9)
+      raw: "dnf install -y python3 sudo systemd"
+    - name: Gather facts
+      setup:

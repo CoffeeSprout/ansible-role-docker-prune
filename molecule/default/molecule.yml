@@ -1,0 +1,52 @@
+---
+dependency:
+  name: galaxy
+driver:
+  name: docker
+platforms:
+  - name: debian12-prune
+    image: debian:12
+    pre_build_image: true
+    command: sleep infinity
+
+  - name: debian13-prune
+    image: debian:13
+    pre_build_image: true
+    command: sleep infinity
+
+  - name: alma8-prune
+    image: almalinux:8
+    pre_build_image: true
+    command: sleep infinity
+
+  - name: alma9-prune
+    image: almalinux:9
+    pre_build_image: true
+    command: sleep infinity
+
+provisioner:
+  name: ansible
+  inventory:
+    host_vars:
+      debian12-prune:
+        ansible_user: root
+      debian13-prune:
+        ansible_user: root
+      alma8-prune:
+        ansible_user: root
+        ansible_python_interpreter: /usr/bin/python3.11
+      alma9-prune:
+        ansible_user: root
+        ansible_python_interpreter: /usr/bin/python3
+
+verifier:
+  name: ansible
+
+scenario:
+  test_sequence:
+    - syntax
+    - create
+    - prepare
+    - converge
+    - verify
+    - destroy

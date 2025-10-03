@@ -1,0 +1,19 @@
+[Unit]
+Description=Docker System Prune Timer
+Documentation=https://docs.docker.com/engine/reference/commandline/system_prune/
+Requires=docker.service
+
+[Timer]
+# When to run (systemd calendar format)
+OnCalendar={{ docker_prune_schedule }}
+
+# Random delay to avoid simultaneous execution across hosts
+{% if docker_prune_random_delay > 0 %}
+RandomizedDelaySec={{ docker_prune_random_delay }}
+{% endif %}
+
+# Catch up missed runs if system was down
+Persistent={{ docker_prune_persistent | lower }}
+
+[Install]
+WantedBy=timers.target

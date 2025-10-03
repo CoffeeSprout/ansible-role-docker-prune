@@ -1,0 +1,29 @@
+---
+galaxy_info:
+  role_name: docker_prune
+  namespace: coffeesprout
+  author: Barry van Someren
+  description: Automated Docker system prune using systemd timers
+  company: CoffeeSprout
+  license: BSD-2-Clause
+  min_ansible_version: "2.12"
+
+  platforms:
+    - name: Debian
+      versions:
+        - "12"
+        - "13"
+    - name: EL
+      versions:
+        - "8"
+        - "9"
+
+  galaxy_tags:
+    - docker
+    - cleanup
+    - maintenance
+    - systemd
+    - automation
+    - prune
+
+dependencies: []
