@@ -9,4 +9,6 @@
   systemd:
     name: docker-prune.timer
     state: restarted
-  when: docker_prune_enabled
+  when:
+    - docker_prune_enabled
+    - not ansible_check_mode

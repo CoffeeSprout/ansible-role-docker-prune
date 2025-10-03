@@ -32,3 +32,4 @@
     enabled: "{{ docker_prune_enabled }}"
     state: "{{ 'started' if docker_prune_enabled else 'stopped' }}"
     daemon_reload: true
+  when: not ansible_check_mode
