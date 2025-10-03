@@ -1,6 +1,6 @@
 # Ansible Role: Docker Prune
 
-![Molecule Tests](https://github.com/CoffeeSprout/ansible-role-docker-prune/actions/workflows/molecule.yml/badge.svg)
+![Syntax Check](https://github.com/CoffeeSprout/ansible-role-docker-prune/actions/workflows/syntax-check.yml/badge.svg)
 
 Automated Docker cleanup using systemd timers. Prevents Docker hosts from running out of disk space by scheduling regular pruning of unused containers, images, networks, and optionally volumes.
 
