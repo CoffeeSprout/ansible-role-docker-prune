@@ -33,7 +33,7 @@ docker_prune_schedule: "Sun *-*-* 06:00:00"
 
 # Random delay to avoid simultaneous execution (seconds)
 # Default: 1800 (30 minutes)
-# Spreads execution across hosts to avoid registry rate limits
+# Spreads execution across hosts to reduce disk I/O stress on shared infrastructure
 docker_prune_random_delay: 1800
 
 # Catch up missed runs if system was down
@@ -241,7 +241,7 @@ journalctl -u docker-prune.service
 # Run prune immediately (doesn't affect timer)
 systemctl start docker-prune.service
 
-# Check what would be pruned (dry run)
+# Check current Docker disk usage
 docker system df
 ```
 
@@ -272,9 +272,6 @@ systemctl enable --now docker-prune.timer
 # Check current Docker disk usage
 docker system df
 
-# See what will be removed (but don't remove it)
-docker system prune --dry-run
-
 # Check if volumes are consuming space
 docker system df -v
 
@@ -294,15 +291,15 @@ journalctl -u docker-prune.service -n 50
 # - Docker API version mismatch
 ```
 
-### Rate Limiting Issues
+### Disk I/O Stress on Shared Infrastructure
 
-If you're hitting registry rate limits during image pulls after pruning:
+If you're experiencing disk I/O issues when many hosts prune simultaneously:
 
 ```yaml
-# Increase random delay spread
+# Increase random delay spread to distribute load
 docker_prune_random_delay: 7200  # 2 hours
 
-# Or increase filter time
+# Or increase filter time to prune less frequently
 docker_prune_filter_until: "168h"  # Keep last week
 ```
 

@@ -3,6 +3,6 @@
   hosts: all
   become: true
   tasks:
-    - name: Include coffeesprout.docker-prune role
-      include_role:
-        name: coffeesprout.docker-prune
+    - name: Import docker-prune role
+      import_role:
+        name: "{{ lookup('env', 'MOLECULE_PROJECT_DIRECTORY') | basename }}"
